@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Grades</title>
+</head>
+<body>
+
+<table border="1">
+
+<tr>
+<th>Name</th>
+<th>Marks</th>
+<th>Grade</th>
+</tr>
+
+<tr id="s1">
+<td>Rahul</td>
+<td>90</td>
+<td class="grade"></td>
+</tr>
+
+<tr id="s2">
+<td>John</td>
+<td>35</td>
+<td class="grade"></td>
+</tr>
+
+<tr id="s3">
+<td>Arif</td>
+<td>70</td>
+<td class="grade"></td>
+</tr>
+
+</table>
+
+<button onclick="checkGrades()">Check Grades</button>
+
+<script>
+
+function checkGrades(){
+
+let rows=document.querySelectorAll("tr");
+
+for(let i=1;i<rows.length;i++){
+
+let marks=parseInt(rows[i].children[1].innerHTML);
+
+if(marks>80){
+
+rows[i].style.background="lightgreen";
+rows[i].children[2].innerHTML="A";
+
+}
+else if(marks<40){
+
+rows[i].style.background="pink";
+rows[i].children[2].innerHTML="F";
+
+}
+else{
+
+rows[i].children[2].innerHTML="B";
+
+}
+
+}
+
+}
+
+</script>
+
+</body>
+</html>

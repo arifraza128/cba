@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Result</title>
+</head>
+<body>
+
+<script>
+let marks = 80;
+
+let result = new Promise(function(resolve, reject){
+
+    if(marks >= 35){
+        resolve("Student Passed");
+    }
+    else{
+        reject("Student Failed");
+    }
+
+});
+
+result.then(function(msg){
+    document.write(msg);
+})
+.catch(function(err){
+    document.write(err);
+});
+</script>
+
+</body>
+</html>

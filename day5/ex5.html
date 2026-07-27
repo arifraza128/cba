@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Quotes</title>
+</head>
+<body>
+
+<h2>Random Quote</h2>
+
+<p id="quote">Click Button</p>
+
+<button onclick="generateQuote()">Generate Quote</button>
+
+<script>
+
+let quotes=[
+"Success comes from hard work.",
+"Never stop learning.",
+"Believe in yourself.",
+"Dream big.",
+"Stay positive."
+];
+
+let colors=["red","blue","green","purple","orange"];
+
+function generateQuote(){
+
+let i=Math.floor(Math.random()*quotes.length);
+
+document.getElementById("quote").innerHTML=quotes[i];
+
+document.getElementById("quote").style.color=colors[i];
+
+document.getElementById("quote").style.fontSize=(20+i*2)+"px";
+
+}
+
+</script>
+
+</body>
+</html>

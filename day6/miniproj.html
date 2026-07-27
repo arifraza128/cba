@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Online Quiz Application</title>
+
+    <style>
+
+        body{
+            font-family:Arial, sans-serif;
+            background:#f2f2f2;
+        }
+
+        .container{
+            width:700px;
+            margin:40px auto;
+            background:white;
+            padding:20px;
+            border-radius:10px;
+            box-shadow:0px 0px 10px gray;
+        }
+
+        h1{
+            text-align:center;
+        }
+
+        #progress{
+            width:100%;
+            height:20px;
+            background:#ddd;
+            border-radius:10px;
+            overflow:hidden;
+            margin-bottom:20px;
+        }
+
+        #bar{
+            width:0%;
+            height:100%;
+            background:green;
+            transition:0.5s;
+        }
+
+        #timer{
+            float:right;
+            color:red;
+            font-size:20px;
+            font-weight:bold;
+        }
+
+        .option{
+            border:1px solid gray;
+            padding:12px;
+            margin:10px 0;
+            border-radius:5px;
+            cursor:pointer;
+        }
+
+        .option:hover{
+            background:#eeeeee;
+        }
+
+        .selected{
+            background:lightgreen;
+            border:2px solid green;
+        }
+
+        button{
+            padding:10px 20px;
+            margin:10px;
+            background:green;
+            color:white;
+            border:none;
+            border-radius:5px;
+            cursor:pointer;
+            font-size:16px;
+        }
+
+        button:hover{
+            background:darkgreen;
+        }
+
+        #result{
+            text-align:center;
+            color:green;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Online JavaScript Quiz</h1>
+
+<div id="progress">
+    <div id="bar"></div>
+</div>
+
+<div id="timer">30</div>
+
+<h3 id="count"></h3>
+
+<h2 id="question"></h2>
+
+<div class="option" id="op1"></div>
+<div class="option" id="op2"></div>
+<div class="option" id="op3"></div>
+<div class="option" id="op4"></div>
+
+<center>
+
+<button id="prev">Previous</button>
+<button id="next">Next</button>
+
+</center>
+
+<h2 id="result"></h2>
+
+</div>
+
+<script>
+
+let quiz=[
+
+{
+question:"Which keyword is used to declare a variable?",
+options:["int","let","char","define"],
+answer:"let"
+},
+
+{
+question:"Which array method adds an element at the end?",
+options:["push()","pop()","slice()","shift()"],
+answer:"push()"
+},
+
+{
+question:"JavaScript is a ______ language.",
+options:["Programming","Markup","Database","Styling"],
+answer:"Programming"
+},
+
+{
+question:"Which company developed JavaScript?",
+options:["Google","Apple","IBM","Netscape"],
+answer:"Netscape"
+},
+
+{
+question:"Which operator checks value and datatype?",
+options:["==","===","=","!="],
+answer:"==="
+},
+
+{
+question:"Which loop executes at least once?",
+options:["for","while","do while","foreach"],
+answer:"do while"
+},
+
+{
+question:"Which method prints output in console?",
+options:["console.log()","print()","alert.log()","document.print()"],
+answer:"console.log()"
+},
+
+{
+question:"Which keyword declares a constant?",
+options:["const","let","var","static"],
+answer:"const"
+}
+
+];
+
+// Random Questions
+
+quiz.sort(function(){
+    return Math.random()-0.5;
+});
+
+let index=0;
+let score=0;
+let answers=new Array(quiz.length).fill("");
+
+let timer=30;
+let interval;
+
+showQuestion();
+startTimer();
+
+function showQuestion(){
+
+document.getElementById("count").innerHTML=
+"Question "+(index+1)+" of "+quiz.length;
+
+document.getElementById("question").innerHTML=
+quiz[index].question;
+
+document.getElementById("op1").innerHTML=quiz[index].options[0];
+document.getElementById("op2").innerHTML=quiz[index].options[1];
+document.getElementById("op3").innerHTML=quiz[index].options[2];
+document.getElementById("op4").innerHTML=quiz[index].options[3];
+
+let progress=((index)/quiz.length)*100;
+
+document.getElementById("bar").style.width=progress+"%";
+
+let all=document.getElementsByClassName("option");
+
+for(let i=0;i<all.length;i++){
+
+all[i].classList.remove("selected");
+
+if(all[i].innerHTML==answers[index]){
+all[i].classList.add("selected");
+}
+
+}
+
+}
+
+function choose(option){
+
+answers[index]=option.innerHTML;
+
+let all=document.getElementsByClassName("option");
+
+for(let i=0;i<all.length;i++){
+all[i].classList.remove("selected");
+}
+
+option.classList.add("selected");
+
+}
+
+document.getElementById("op1").addEventListener("click",function(){choose(this);});
+document.getElementById("op2").addEventListener("click",function(){choose(this);});
+document.getElementById("op3").addEventListener("click",function(){choose(this);});
+document.getElementById("op4").addEventListener("click",function(){choose(this);});
+
+function startTimer(){
+
+clearInterval(interval);
+
+timer=30;
+
+document.getElementById("timer").innerHTML="Time : "+timer;
+
+interval=setInterval(function(){
+
+timer--;
+
+document.getElementById("timer").innerHTML="Time : "+timer;
+
+if(timer==0){
+
+nextQuestion();
+
+}
+
+},1000);
+
+}
+
+function nextQuestion(){
+
+clearInterval(interval);
+
+if(index<quiz.length-1){
+
+index++;
+
+showQuestion();
+
+startTimer();
+
+}
+else{
+
+finishQuiz();
+
+}
+
+}
+
+document.getElementById("next").addEventListener("click",nextQuestion);
+
+document.getElementById("prev").addEventListener("click",function(){
+
+if(index>0){
+
+clearInterval(interval);
+
+index--;
+
+showQuestion();
+
+startTimer();
+
+}
+
+});
+
+function finishQuiz(){
+
+score=0;
+
+for(let i=0;i<quiz.length;i++){
+
+if(answers[i]==quiz[i].answer){
+
+score++;
+
+}
+
+}
+
+document.getElementById("bar").style.width="100%";
+
+document.getElementById("timer").style.display="none";
+document.getElementById("count").style.display="none";
+document.getElementById("question").style.display="none";
+
+document.getElementById("op1").style.display="none";
+document.getElementById("op2").style.display="none";
+document.getElementById("op3").style.display="none";
+document.getElementById("op4").style.display="none";
+
+document.getElementById("next").style.display="none";
+document.getElementById("prev").style.display="none";
+
+document.getElementById("result").innerHTML=
+
+"<h2>🎉 Quiz Completed</h2>"+
+"<h3>Total Questions : "+quiz.length+"</h3>"+
+"<h3>Correct Answers : "+score+"</h3>"+
+"<h3>Wrong Answers : "+(quiz.length-score)+"</h3>"+
+"<h3>Percentage : "+((score/quiz.length)*100).toFixed(2)+"%</h3>";
+
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Product</title>
+</head>
+<body id="card">
+
+<h2>Laptop</h2>
+
+<h3 id="status">Available</h3>
+
+<button onclick="changeStatus()">Toggle Availability</button>
+
+<script>
+
+let available=true;
+
+function changeStatus(){
+
+if(available){
+
+document.getElementById("status").innerHTML="Out of Stock";
+document.getElementById("status").style.color="red";
+document.getElementById("card").style.background="pink";
+
+available=false;
+
+}
+else{
+
+document.getElementById("status").innerHTML="Available";
+document.getElementById("status").style.color="green";
+document.getElementById("card").style.background="lightgreen";
+
+available=true;
+
+}
+
+}
+
+</script>
+
+</body>
+</html>

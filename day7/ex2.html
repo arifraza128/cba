@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ATM Transaction</title>
+</head>
+<body>
+
+<script>
+let balance = 4000;
+
+let atm = new Promise(function(resolve, reject) {
+
+    if (balance >= 5000) {
+        resolve("Withdrawal Successful");
+    } else {
+        reject("Insufficient Balance");
+    }
+
+});
+
+atm.then(function(result) {
+    document.write(result);
+})
+.catch(function(error) {
+    document.write(error);
+});
+</script>
+
+</body>
+</html>
