@@ -1,0 +1,15 @@
+# Ignore node_modules in all subfolders
+**/node_modules/
+node_modules/
+
+# Ignore production builds
+**/dist/
+dist/
+
+# Ignore log files
+*.log
+**/*.log
+
+# Ignore local environment files
+.env*.local
+**/site-stats/
