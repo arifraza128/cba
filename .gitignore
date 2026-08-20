@@ -5,11 +5,14 @@ node_modules/
 # Ignore production builds
 **/dist/
 dist/
+.vite/
 
 # Ignore log files
 *.log
 **/*.log
+npm-debug.log*
 
 # Ignore local environment files
 .env*.local
 **/site-stats/
+.DS_Store
