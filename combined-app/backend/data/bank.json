@@ -1,0 +1,11 @@
+{
+  "openingBalance": 25000,
+  "transactions": [
+    {
+      "id": 1788179493791,
+      "type": "credit",
+      "amount": 5000,
+      "date": "31/8/2026, 6:01:33 pm"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "name": "combined-backend",
+  "version": "1.0.0",
+  "description": "Consolidated backend server for health and finance tasks",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2"
+  }
+}
