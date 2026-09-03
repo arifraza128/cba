@@ -73,3 +73,12 @@ VALUES
 (108, 204, '2024-04-05', 'Project Manager'),
 (109, 204, '2024-04-10', 'Sales Analyst');
 GO
+
+SELECT TABLE_NAME
+FROM INFORMATION_SCHEMA.TABLES
+WHERE TABLE_TYPE = 'BASE TABLE';
+SELECT * FROM Departments;
+SELECT * FROM Employees;
+SELECT * FROM Employees;
+SELECT * FROM Projects;
+SELECT * FROM Employee_Projects;
