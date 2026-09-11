@@ -11,3 +11,9 @@ CREATE TABLE Doctors (
     ConsultationFee DECIMAL(10,2),
     JoiningDate DATE
 );
+INSERT INTO Doctors
+(DoctorName, Specialization, Gender, Phone, Email, Qualification, ExperienceYears, Department, ConsultationFee, JoiningDate)
+VALUES
+('Dr. Rahul Sharma', 'Cardiologist', 'Male', '9876543210', 'rahul@gmail.com', 'MBBS, MD', 10, 'Cardiology', 800.00, '2022-06-15'),
+('Dr. Priya Singh', 'Dermatologist', 'Female', '9876543211', 'priya@gmail.com', 'MBBS, MD', 7, 'Dermatology', 600.00, '2023-01-10'),
+('Dr. Arjun Kumar', 'Orthopedic', 'Male', '9876543212', 'arjun@gmail.com', 'MBBS, MS', 8, 'Orthopedics', 700.00, '2021-08-20');
