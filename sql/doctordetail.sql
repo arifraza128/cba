@@ -44,5 +44,15 @@ VALUES
 ('Dr. Neha Kapoor', 'DM Oncology', 10, 4),
 ('Dr. Sameer Khan', 'MD Psychiatry', 7, 5),
 ('Dr. Ritu Sharma', 'MS ENT', 9, 6);
+SELECT
+    Doctor.DoctorID,
+    Doctor.DoctorName,
+    Doctor.Qualification,
+    Doctor.ExperienceYears,
+    Department.DepartmentName,
+    Department.FloorNumber
+FROM Doctor
+INNER JOIN Department
+ON Doctor.DepartmentID = Department.DepartmentID;
 
 
