@@ -35,3 +35,14 @@ INSERT INTO Doctor VALUES
 (114, 'Kavya Reddy', 'Ophthalmologist', 37, '9876543223', 72000),
 (115, 'Manoj Singh', 'General Surgeon', 46, '9876543224', 100000),
 (116, 'Divya Shah', 'Radiologist', 40, '9876543225', 88000);
+INSERT INTO Doctor
+(DoctorName, Qualification, ExperienceYears, DepartmentID)
+VALUES
+('Dr. Karan Malhotra', 'MD Emergency Medicine', 12, 1),
+('Dr. Meera Nair', 'MD Radiology', 8, 2),
+('Dr. Vikram Rao', 'DM Gastroenterology', 15, 3),
+('Dr. Neha Kapoor', 'DM Oncology', 10, 4),
+('Dr. Sameer Khan', 'MD Psychiatry', 7, 5),
+('Dr. Ritu Sharma', 'MS ENT', 9, 6);
+
+
