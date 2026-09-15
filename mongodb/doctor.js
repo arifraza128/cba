@@ -62,3 +62,32 @@ db.doctors.insertMany([
         consultationFee: 1200
     }
 ])
+db.patients.insertMany([
+    {
+        patientId: "P001",
+        name: "Arjun Mehta",
+        age: 28,
+        gender: "Male",
+        phone: "9000000001",
+        bloodGroup: "O+",
+        city: "Bengaluru"
+    },
+    {
+        patientId: "P002",
+        name: "Sneha Rao",
+        age: 35,
+        gender: "Female",
+        phone: "9000000002",
+        bloodGroup: "A+",
+        city: "Mysuru"
+    },
+    {
+        patientId: "P003",
+        name: "Vikram Singh",
+        age: 45,
+        gender: "Male",
+        phone: "9000000003",
+        bloodGroup: "B+",
+        city: "Bengaluru"
+    }
+])
