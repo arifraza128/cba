@@ -30,3 +30,35 @@ db.doctors.insertMany([
         consultationFee: 1000
     }
 ])
+db.doctors.insertMany([
+    {
+        doctorId: "D001",
+        name: "Dr. Rahul Sharma",
+        specialization: "Cardiologist",
+        department: "Cardiology",
+        experience: 12,
+        phone: "9876543210",
+        email: "rahul@hospital.com",
+        consultationFee: 1000
+    },
+    {
+        doctorId: "D002",
+        name: "Dr. Priya Singh",
+        specialization: "Dermatologist",
+        department: "Dermatology",
+        experience: 8,
+        phone: "9876543211",
+        email: "priya@hospital.com",
+        consultationFee: 700
+    },
+    {
+        doctorId: "D003",
+        name: "Dr. Amit Kumar",
+        specialization: "Neurologist",
+        department: "Neurology",
+        experience: 15,
+        phone: "9876543212",
+        email: "amit@hospital.com",
+        consultationFee: 1200
+    }
+])
