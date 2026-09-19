@@ -20,3 +20,8 @@ VALUES
 /* selecting all from student */
 
 SELECT * FROM Students;
+
+/* select name and dept */
+
+SELECT name, department
+FROM Students;
