@@ -17,3 +17,6 @@ VALUES
 (3, 'Priya', 21, 'Female', 'priya@gmail.com', '9876543212', 'CSE', 3, 9.1),
 (4, 'Anjali', 20, 'Female', 'anjali@gmail.com', '9876543213', 'ISE', 2, 8.7),
 (5, 'Amit', 22, 'Male', 'amit@gmail.com', '9876543214', 'CSE', 4, 7.2);
+/* selecting all from student */
+
+SELECT * FROM Students;
