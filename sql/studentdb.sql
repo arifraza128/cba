@@ -29,3 +29,7 @@ FROM Students;
 SELECT *
 FROM Students
 WHERE department = 'CSE';
+/* find student whose cgpa is greater then 8 */
+SELECT *
+FROM Students
+WHERE cgpa > 8;
