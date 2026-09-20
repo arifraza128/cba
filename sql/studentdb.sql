@@ -25,3 +25,7 @@ SELECT * FROM Students;
 
 SELECT name, department
 FROM Students;
+/* finding cse students */
+SELECT *
+FROM Students
+WHERE department = 'CSE';
