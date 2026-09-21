@@ -33,7 +33,12 @@ WHERE department = 'CSE';
 SELECT *
 FROM Students
 WHERE cgpa > 8;
-/* tudents in 4th year */
+/* students in 4th year */
 SELECT *
 FROM Students
 WHERE year = 4;
+/* CSE students with CGPA > 8 */
+SELECT *
+FROM Students
+WHERE department = 'CSE'
+AND cgpa > 8;
