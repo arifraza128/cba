@@ -42,3 +42,7 @@ SELECT *
 FROM Students
 WHERE department = 'CSE'
 AND cgpa > 8;
+SELECT *
+FROM Students
+ORDER BY cgpa DESC;
+
