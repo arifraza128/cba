@@ -57,4 +57,7 @@ SELECT *
 FROM Students
 ORDER BY cgpa DESC;
 
+SELECT *
+FROM Students
+ORDER BY cgpa ASC;
 
