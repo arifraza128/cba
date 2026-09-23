@@ -47,3 +47,14 @@ FROM Students
 ORDER BY cgpa DESC;
 SELECT MAX(cgpa) AS highest_cgpa
 FROM Students;
+
+SELECT *
+FROM Students
+WHERE year = 4;
+
+
+SELECT *
+FROM Students
+ORDER BY cgpa DESC;
+
+
