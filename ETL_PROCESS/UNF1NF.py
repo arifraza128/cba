@@ -24,3 +24,5 @@ INSERT INTO Student_Courses_1NF VALUES
 ('S102', 'Priya', 'Python'),
 ('S103', 'Amit', 'Java'),
 ('S103', 'Amit', 'C#');
+
+SELECT * FROM Student_Courses_1NF;
