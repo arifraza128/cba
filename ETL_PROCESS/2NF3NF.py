@@ -10,3 +10,12 @@ CREATE TABLE MANAGER (
     Manager_ID VARCHAR(10) PRIMARY KEY,
     Manager_Name VARCHAR(50)
 );
+CREATE TABLE DEPARTMENT (
+    Dept_ID VARCHAR(10) PRIMARY KEY,
+    Dept_Name VARCHAR(50),
+    Dept_Location VARCHAR(50),
+    Manager_ID VARCHAR(10),
+
+    FOREIGN KEY (Manager_ID)
+        REFERENCES MANAGER(Manager_ID)
+);
