@@ -1,1 +1,8 @@
+CREATE TABLE EMPLOYEE (
+    Employee_ID VARCHAR(10) PRIMARY KEY,
+    Employee_Name VARCHAR(50),
+    Dept_ID VARCHAR(10),
 
+    FOREIGN KEY (Dept_ID)
+        REFERENCES DEPARTMENT(Dept_ID)
+);
