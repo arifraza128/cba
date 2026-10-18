@@ -245,5 +245,121 @@ def run_iot_sensor_monitoring(spark):
     ).csv(str(output_path / "clean_readings"))
 
     print(f"IoT output saved to: {output_path}")
+    =======================================================
+# PROJECT 2: WEBSITE LOG ANALYTICS
+# ============================================================
+
+def run_web_log_analytics(spark):
+
+    print("\n" + "=" * 65)
+    print("PROJECT 2: WEBSITE LOG ANALYTICS")
+    print("=" * 65)
+
+    schema = StructType([
+        StructField("timestamp", StringType(), True),
+        StructField("user_id", StringType(), True),
+        StructField("method", StringType(), True),
+        StructField("path", StringType(), True),
+        StructField("status_code", IntegerType(), True),
+        StructField("response_ms", DoubleType(), True),
+    ])
+
+    input_file = str(DATA_DIR / "web_requests.csv")
+    output_path = OUTPUT_DIR / "web_log_analytics"
+
+    raw = (
+        spark.read
+        .option("header", True)
+        .schema(schema)
+        .csv(input_file)
+    )
+
+    print("\nRaw website logs:")
+    raw.show(truncate=False)
+
+    # Clean the logs
+    clean = (
+        raw
+        .withColumn(
+            "event_time",
+            to_timestamp(col("timestamp"), "yyyy-MM-dd HH:mm:ss"),
+        )
+        .withColumn("path", trim(col("path")))
+        .withColumn("user_id", trim(col("user_id")))
+        .filter(col("event_time").isNotNull())
+        .filter(
+            col("path").isNotNull()
+            & (col("path") != "")
+        )
+        .filter(col("status_code").between(100, 599))
+        .filter(
+            col("response_ms").isNotNull()
+            & (col("response_ms") >= 0)
+        )
+        .dropDuplicates([
+            "timestamp",
+            "user_id",
+            "method",
+            "path",
+            "status_code",
+            "response_ms",
+        ])
+    )
+
+    print("\nClean website logs:")
+    clean.show(truncate=False)
+
+    # Analyze requests by hour
+    hourly = (
+        clean
+        .withColumn("hour", date_trunc("hour", col("event_time")))
+        .groupBy("hour")
+        .agg(
+            count("*").alias("request_count"),
+            countDistinct(
+                when(col("user_id") != "", col("user_id"))
+            ).alias("active_users"),
+            avg("response_ms").alias("avg_response_ms"),
+            spark_sum(
+                when(col("status_code") >= 500, 1).otherwise(0)
+            ).alias("server_errors_5xx"),
+            spark_sum(
+                when(
+                    col("status_code").between(400, 499), 1
+                ).otherwise(0)
+            ).alias("client_errors_4xx"),
+        )
+        .orderBy("hour")
+    )
+
+    # Find the most requested website pages
+    popular_paths = (
+        clean
+        .groupBy("path")
+        .agg(
+            count("*").alias("request_count"),
+            avg("response_ms").alias("avg_response_ms"),
+        )
+        .orderBy(col("request_count").desc(), col("path"))
+    )
+
+    print("\nHourly website metrics:")
+    hourly.show(truncate=False)
+
+    print("\nMost requested paths:")
+    popular_paths.show(10, truncate=False)
+
+    # Save results
+    hourly.write.mode("overwrite").option(
+        "header", True
+    ).csv(str(output_path / "hourly_metrics"))
+
+    popular_paths.write.mode("overwrite").option(
+        "header", True
+    ).csv(str(output_path / "popular_paths"))
+
+    print(f"Website output saved to: {output_path}")
+
+
 
 
