@@ -169,3 +169,81 @@ def create_sample_data():
 
     print(f"Sample datasets created in: {DATA_DIR}")
 
+# ============================================================
+# PROJECT 1: IoT SENSOR MONITORING
+# ============================================================
+
+def run_iot_sensor_monitoring(spark):
+
+    print("\n" + "=" * 65)
+    print("PROJECT 1: IoT SENSOR MONITORING")
+    print("=" * 65)
+
+    schema = StructType([
+        StructField("device_id", StringType(), True),
+        StructField("timestamp", StringType(), True),
+        StructField("temperature_c", DoubleType(), True),
+        StructField("humidity_pct", DoubleType(), True),
+    ])
+
+    input_file = str(DATA_DIR / "sensor_readings.json")
+    output_path = OUTPUT_DIR / "iot_sensor_monitoring"
+
+    raw = spark.read.schema(schema).json(input_file)
+
+    print("\nRaw sensor data:")
+    raw.show(truncate=False)
+
+    # Clean the data
+    clean = (
+        raw
+        .withColumn("device_id", trim(col("device_id")))
+        .withColumn(
+            "event_time",
+            to_timestamp(col("timestamp"), "yyyy-MM-dd HH:mm:ss"),
+        )
+        .filter(
+            col("device_id").isNotNull()
+            & (col("device_id") != "")
+        )
+        .filter(col("event_time").isNotNull())
+        .filter(col("temperature_c").between(-50, 100))
+        .filter(col("humidity_pct").between(0, 100))
+        .dropDuplicates(["device_id", "event_time"])
+    )
+
+    print("\nClean sensor data:")
+    clean.show(truncate=False)
+
+    # Calculate hourly metrics
+    hourly = (
+        clean
+        .withColumn("hour", date_trunc("hour", col("event_time")))
+        .groupBy("hour")
+        .agg(
+            count("*").alias("readings_count"),
+            countDistinct("device_id").alias("active_devices"),
+            avg("temperature_c").alias("avg_temperature_c"),
+            avg("humidity_pct").alias("avg_humidity_pct"),
+            spark_sum(
+                when(col("temperature_c") >= 35, 1).otherwise(0)
+            ).alias("hot_readings"),
+        )
+        .orderBy("hour")
+    )
+
+    print("\nHourly IoT metrics:")
+    hourly.show(truncate=False)
+
+    # Save results
+    hourly.write.mode("overwrite").option(
+        "header", True
+    ).csv(str(output_path / "hourly_metrics"))
+
+    clean.write.mode("overwrite").option(
+        "header", True
+    ).csv(str(output_path / "clean_readings"))
+
+    print(f"IoT output saved to: {output_path}")
+
+
