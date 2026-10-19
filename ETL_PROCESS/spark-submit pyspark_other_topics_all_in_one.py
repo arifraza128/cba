@@ -360,6 +360,143 @@ def run_web_log_analytics(spark):
 
     print(f"Website output saved to: {output_path}")
 
+# ============================================================
+# PROJECT 3: MOVIE STREAMING ANALYTICS
+# ============================================================
+
+def run_movie_streaming_analytics(spark):
+
+    print("\n" + "=" * 65)
+    print("PROJECT 3: MOVIE STREAMING ANALYTICS")
+    print("=" * 65)
+
+    schema = StructType([
+        StructField("watched_at", StringType(), True),
+        StructField("viewer_id", StringType(), True),
+        StructField("title", StringType(), True),
+        StructField("genre", StringType(), True),
+        StructField("watch_minutes", IntegerType(), True),
+        StructField("completed", StringType(), True),
+    ])
+
+    input_file = str(DATA_DIR / "watch_events.csv")
+    output_path = OUTPUT_DIR / "movie_streaming_analytics"
+
+    raw = (
+        spark.read
+        .option("header", True)
+        .schema(schema)
+        .csv(input_file)
+    )
+
+    print("\nRaw streaming data:")
+    raw.show(truncate=False)
+
+    # Convert completion values into Boolean values
+    completed_text = lower(trim(col("completed")))
+
+    clean = (
+        raw
+        .withColumn(
+            "event_time",
+            to_timestamp(col("watched_at"), "yyyy-MM-dd HH:mm:ss"),
+        )
+        .withColumn("viewer_id", trim(col("viewer_id")))
+        .withColumn("title", trim(col("title")))
+        .withColumn("genre", trim(col("genre")))
+        .withColumn(
+            "completed_bool",
+            when(
+                completed_text.isin("true", "1", "yes"),
+                lit(True),
+            ).when(
+                completed_text.isin("false", "0", "no"),
+                lit(False),
+            ),
+        )
+        .filter(col("event_time").isNotNull())
+        .filter(
+            col("viewer_id").isNotNull()
+            & (col("viewer_id") != "")
+        )
+        .filter(
+            col("title").isNotNull()
+            & (col("title") != "")
+        )
+        .filter(
+            col("genre").isNotNull()
+            & (col("genre") != "")
+        )
+        .filter(col("watch_minutes").between(1, 1440))
+        .filter(col("completed_bool").isNotNull())
+        .dropDuplicates([
+            "watched_at",
+            "viewer_id",
+            "title",
+            "watch_minutes",
+        ])
+    )
+
+    print("\nClean streaming data:")
+    clean.show(truncate=False)
+
+    # Calculate performance by movie genre
+    genre_metrics = (
+        clean
+        .groupBy("genre")
+        .agg(
+            count("*").alias("watch_events"),
+            countDistinct("viewer_id").alias("unique_viewers"),
+            spark_sum("watch_minutes").alias("total_watch_minutes"),
+            avg("watch_minutes").alias("avg_watch_minutes"),
+            spark_sum(
+                when(col("completed_bool"), 1).otherwise(0)
+            ).alias("completed_events"),
+        )
+        .withColumn(
+            "total_watch_hours",
+            col("total_watch_minutes") / 60.0,
+        )
+        .withColumn(
+            "completion_rate_pct",
+            col("completed_events") * 100.0 / col("watch_events"),
+        )
+        .orderBy(col("total_watch_minutes").desc())
+    )
+
+    # Calculate daily active viewers
+    daily_viewers = (
+        clean
+        .withColumn(
+            "watch_date",
+            date_format(col("event_time"), "yyyy-MM-dd"),
+        )
+        .groupBy("watch_date")
+        .agg(
+            countDistinct("viewer_id").alias("daily_active_viewers"),
+            count("*").alias("watch_events"),
+            spark_sum("watch_minutes").alias("total_watch_minutes"),
+        )
+        .orderBy("watch_date")
+    )
+
+    print("\nGenre performance:")
+    genre_metrics.show(truncate=False)
+
+    print("\nDaily audience:")
+    daily_viewers.show(truncate=False)
+
+    # Save results
+    genre_metrics.write.mode("overwrite").option(
+        "header", True
+    ).csv(str(output_path / "genre_metrics"))
+
+    daily_viewers.write.mode("overwrite").option(
+        "header", True
+    ).csv(str(output_path / "daily_viewers"))
+
+    print(f"Movie streaming output saved to: {output_path}")
+
 
 
 
