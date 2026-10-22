@@ -1,0 +1,33 @@
+body {
+    font-family: Arial;
+    background: #f5f5f5;
+}
+
+.container {
+    width: 700px;
+    margin: 40px auto;
+}
+
+form,
+.appointment {
+    background: white;
+    padding: 20px;
+    margin-top: 20px;
+    border-radius: 10px;
+}
+
+input {
+    display: block;
+    padding: 10px;
+    margin: 10px 0;
+}
+
+button {
+    padding: 10px;
+    margin: 5px;
+    cursor: pointer;
+}
+
+.appointment {
+    border-left: 5px solid #333;
+}

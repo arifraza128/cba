@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1788179281041,
+    "amount": 500,
+    "category": "Groceries",
+    "description": "Weekly food"
+  },
+  {
+    "id": 1788189048164,
+    "amount": 3,
+    "category": "book",
+    "description": "book purschase"
+  },
+  {
+    "id": 1788189106226,
+    "amount": 888,
+    "category": "book",
+    "description": "aiff"
+  }
+]
