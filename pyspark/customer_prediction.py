@@ -116,3 +116,48 @@ def main():
 
     last_seven = history[-7:]
     latest_date = history[-1]["date"]
+    next_date = latest_date + timedelta(days=1)
+
+    previous_day_count = float(history[-1]["customers"])
+    previous_week_count = float(history[-7]["customers"])
+
+    average_seven_days = sum(
+        float(row["customers"]) for row in last_seven
+    ) / 7.0
+
+    # Spark dayofweek: Sunday=1, Monday=2, ..., Saturday=7
+    next_day_of_week = next_date.isoweekday() % 7 + 1
+
+    future = spark.createDataFrame(
+        [(
+            next_date,
+            next_day_of_week,
+            next_date.month,
+            previous_day_count,
+            previous_week_count,
+            average_seven_days
+        )],
+        [
+            "date", "day_of_week", "month",
+            "lag_1", "lag_7", "avg_prev_7"
+        ]
+    )
+
+    future_data = assembler.transform(future)
+    forecast = final_model.transform(future_data)
+
+    print("Customer Forecast for Tomorrow")
+
+    forecast.select(
+        "date",
+        spark_round(col("prediction"))
+        .cast("int")
+        .alias("predicted_customers")
+    ).show(truncate=False)
+
+    spark.stop()
+
+
+if __name__ == "__main__":
+    main()
+
