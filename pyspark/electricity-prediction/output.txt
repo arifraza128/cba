@@ -1,1 +1,23 @@
+Electricity Data
++----------+-----+
+|      date|units|
++----------+-----+
+|2026-10-01|120.0|
+|2026-10-02|125.0|
++----------+-----+
 
+Mean Absolute Error: <calculated value>
+
+Actual vs Predicted Usage
++----------+-----+----------+
+|      date|units|prediction|
++----------+-----+----------+
+|...       | ... |      ... |
++----------+-----+----------+
+
+Tomorrow Electricity Prediction
++----------+----------+
+|      date|prediction|
++----------+----------+
+|2026-10-29|calculated|
++----------+----------+
