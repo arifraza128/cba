@@ -69,3 +69,30 @@ df = df.sort_values(['borough', 'pickup_dt'])
 df['historical_ride_requests'] = (
     df.groupby('borough')['pickups'].shift(1)
 )
+df = df.dropna(subset=['historical_ride_requests'])
+
+features = [
+    'historical_ride_requests',
+    'temp',
+    'spd',
+    'vsb',
+    'pcp01',
+    'pcp06',
+    'pcp24'
+]
+
+X = df[features]
+y = df['pickups']
+
+df = df.sort_values('pickup_dt')
+
+split = int(len(df) * 0.80)
+
+X = df[features]
+y = df['pickups']
+
+X_train = X.iloc[:split]
+X_test = X.iloc[split:]
+
+y_train = y.iloc[:split]
+y_test = y.iloc[split:]
