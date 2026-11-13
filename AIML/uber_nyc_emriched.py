@@ -31,3 +31,41 @@ df.head()
 df.shape
 
 df.columns
+df['pickup_dt'] = pd.to_datetime(df['pickup_dt'])
+
+print("Dataset start:", df['pickup_dt'].min())
+print("Dataset end:", df['pickup_dt'].max())
+
+print("\nTime intervals:")
+print(df['pickup_dt'].sort_values().diff().value_counts().head())
+
+print("Missing values:")
+print(df.isnull().sum())
+
+print("\nDuplicate records:")
+print(df.duplicated().sum())
+
+df.info()
+
+borough_demand = (
+    df.groupby('borough')['pickups']
+    .sum()
+    .sort_values(ascending=False)
+)
+
+print(borough_demand)
+
+borough_demand.plot(
+    kind='bar',
+    figsize=(10,5),
+    title='Total Uber Pickups by Borough'
+)
+
+plt.ylabel('Total Pickups')
+plt.show()
+
+df = df.sort_values(['borough', 'pickup_dt'])
+
+df['historical_ride_requests'] = (
+    df.groupby('borough')['pickups'].shift(1)
+)
