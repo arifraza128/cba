@@ -96,3 +96,88 @@ X_test = X.iloc[split:]
 
 y_train = y.iloc[:split]
 y_test = y.iloc[split:]
+y_train = y.iloc[:split]
+y_test = y.iloc[split:]
+
+print(X_train.shape)
+print(X_test.shape)
+
+from sklearn.preprocessing import StandardScaler
+
+scaler = StandardScaler()
+
+X_train_scaled = scaler.fit_transform(X_train)
+
+X_test_scaled = scaler.transform(X_test)
+
+from sklearn.linear_model import LinearRegression
+
+model = LinearRegression()
+
+model.fit(X_train_scaled, y_train)
+
+y_pred = model.predict(X_test_scaled)
+
+print("Model training completed!")
+
+import numpy as np
+from sklearn.metrics import mean_squared_error, r2_score
+
+rmse = np.sqrt(mean_squared_error(y_test, y_pred))
+
+r2 = r2_score(y_test, y_pred)
+
+print("RMSE:", rmse)
+print("R2 Score:", r2)
+
+baseline_pred = np.full(
+    len(y_test),
+    y_train.mean()
+)
+
+baseline_rmse = np.sqrt(
+    mean_squared_error(y_test, baseline_pred)
+)
+
+baseline_r2 = r2_score(y_test, baseline_pred)
+
+print("Baseline RMSE:", baseline_rmse)
+print("Model RMSE:", rmse)
+
+print("Baseline R2:", baseline_r2)
+print("Model R2:", r2)
+
+# pyrefly: ignore[missing-import]
+from statsmodels.stats.outliers_influence import variance_inflation_factor
+# pyrefly: ignore[missing-import]
+from statsmodels.tools.tools import add_constant
+
+X_vif = add_constant(X_train)
+
+vif_df = pd.DataFrame()
+
+vif_df['Feature'] = X_vif.columns
+
+vif_df['VIF'] = [
+    variance_inflation_factor(X_vif.values, i)
+    for i in range(X_vif.shape[1])
+]
+
+print(vif_df)
+
+df['pickup_dt'] = pd.to_datetime(df['pickup_dt'])
+
+print("First 10 records:")
+print(df[['pickup_dt', 'borough', 'pickups']].head(10))
+
+print("\nTime interval distribution:")
+print(
+    df.sort_values('pickup_dt')['pickup_dt']
+      .drop_duplicates()
+      .diff()
+      .value_counts()
+      .head(10)
+)
+
+print("\nUnique boroughs:")
+print(df['borough'].unique())
