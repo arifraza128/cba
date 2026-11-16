@@ -1,3 +1,4 @@
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -40,3 +41,12 @@ X_test = X.iloc[split_index:]
 
 y_train = y.iloc[:split_index]
 y_test = y.iloc[split_index:]
+# 4. Polynomial Ridge Regression pipeline
+model = Pipeline([
+    ("polynomial", PolynomialFeatures(degree=2, include_bias=False)),
+    ("scaler", StandardScaler()),
+    ("ridge", Ridge(alpha=1.0))
+])
+
+# 5. Train model
+model.fit(X_train, y_train)
