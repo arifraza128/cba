@@ -20,3 +20,23 @@ features = [
 ]
 
 target = "remaining_useful_life"
+# Remove missing values
+df = df[features + [target]].dropna()
+
+X = df[features]
+y = df[target]
+
+# 3. Split data chronologically (80% training, 20% testing)
+# Useful for continuous machine sensor data
+df = df.sort_values("total_operating_hours")
+
+X = df[features]
+y = df[target]
+
+split_index = int(len(df) * 0.8)
+
+X_train = X.iloc[:split_index]
+X_test = X.iloc[split_index:]
+
+y_train = y.iloc[:split_index]
+y_test = y.iloc[split_index:]
