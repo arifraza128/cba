@@ -72,3 +72,13 @@ plt.axhline(y=0, color="red", linestyle="--")
 plt.xlabel("Predicted Remaining Useful Life")
 plt.ylabel("Residuals")
 plt.title("Residuals vs Predicted Values")
+# Residual distribution
+plt.subplot(1, 2, 2)
+plt.hist(residuals, bins=30, edgecolor="black")
+plt.axvline(x=0, color="red", linestyle="--")
+plt.xlabel("Residuals")
+plt.ylabel("Frequency")
+plt.title("Residual Distribution")
+
+plt.tight_layout()
+plt.show()
