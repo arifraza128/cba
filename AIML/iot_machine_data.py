@@ -50,3 +50,10 @@ model = Pipeline([
 
 # 5. Train model
 model.fit(X_train, y_train)
+# 6. Make predictions
+y_pred = model.predict(X_test)
+
+# 7. Calculate Mean Absolute Error
+mae = mean_absolute_error(y_test, y_pred)
+
+print("Mean Absolute Error (MAE):", round(mae, 2), "hours")
