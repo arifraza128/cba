@@ -57,3 +57,18 @@ y_pred = model.predict(X_test)
 mae = mean_absolute_error(y_test, y_pred)
 
 print("Mean Absolute Error (MAE):", round(mae, 2), "hours")
+# 8. Calculate residuals
+residuals = y_test - y_pred
+
+print("Mean Residual:", round(residuals.mean(), 2), "hours")
+
+# 9. Plot residuals
+plt.figure(figsize=(12, 5))
+
+# Residuals vs predicted values
+plt.subplot(1, 2, 1)
+plt.scatter(y_pred, residuals, alpha=0.6)
+plt.axhline(y=0, color="red", linestyle="--")
+plt.xlabel("Predicted Remaining Useful Life")
+plt.ylabel("Residuals")
+plt.title("Residuals vs Predicted Values")
