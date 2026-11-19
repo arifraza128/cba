@@ -53,3 +53,54 @@ X_train, X_test, y_train, y_test = train_test_split(
 )
 print("\nTraining samples:", len(X_train))
 print("Testing samples:", len(X_test))
+# 5. Experiment with Gini, Entropy and tree parameters
+results = []
+best_model = None
+best_score = -1
+best_gap = float("inf")
+best_name = ""
+
+for criterion in ["gini", "entropy"]:
+    for depth in [2, 3, 5, 7, 10]:
+        for min_split in [2, 5, 10]:
+            for min_leaf in [1, 2, 4]:
+                model = DecisionTreeClassifier(
+                    criterion=criterion,
+                    max_depth=depth,
+                    min_samples_split=min_split,
+                    min_samples_leaf=min_leaf,
+                    random_state=42
+                )
+                model.fit(X_train, y_train)
+                train_acc = model.score(X_train, y_train)
+                test_acc = model.score(X_test, y_test)
+                gap = abs(train_acc - test_acc)
+
+                results.append({
+                    "Criterion": criterion,
+                    "Max Depth": depth,
+                    "Min Samples Split": min_split,
+                    "Min Samples Leaf": min_leaf,
+                    "Training Accuracy": train_acc,
+                    "Testing Accuracy": test_acc,
+                    "Accuracy Difference": gap
+                })
+
+                if test_acc > best_score or (
+                    test_acc == best_score and gap < best_gap
+                ):
+                    best_score = test_acc
+                    best_gap = gap
+                    best_model = model
+                    best_name = (
+                        f"{criterion}, depth={depth}, "
+                        f"min_split={min_split}, min_leaf={min_leaf}"
+                    )
+
+results_df = pd.DataFrame(results).sort_values(
+    ["Testing Accuracy", "Accuracy Difference"],
+    ascending=[False, True]
+)
+print("\nTop 10 model configurations:")
+print(results_df.head(10).to_string(index=False))
+results_df.to_csv("breast_cancer_model_comparison.csv", index=False)
