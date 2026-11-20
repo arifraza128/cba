@@ -115,3 +115,16 @@ print("Recall:", recall_score(y_test, y_pred, zero_division=0))
 print("F1-score:", f1_score(y_test, y_pred, zero_division=0))
 print("\nClassification report:")
 print(classification_report(y_test, y_pred, target_names=cancer.target_names))
+# 7. Confusion matrix
+cm = confusion_matrix(y_test, y_pred)
+plt.figure(figsize=(6, 5))
+sns.heatmap(
+    cm, annot=True, fmt="d", cmap="Blues",
+    xticklabels=cancer.target_names,
+    yticklabels=cancer.target_names
+)
+plt.title("Confusion Matrix")
+plt.xlabel("Predicted")
+plt.ylabel("Actual")
+plt.tight_layout()
+plt.show()
