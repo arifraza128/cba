@@ -104,3 +104,14 @@ results_df = pd.DataFrame(results).sort_values(
 print("\nTop 10 model configurations:")
 print(results_df.head(10).to_string(index=False))
 results_df.to_csv("breast_cancer_model_comparison.csv", index=False)
+
+# 6. Evaluate best model
+y_pred = best_model.predict(X_test)
+print("\nBest model:", best_name)
+print("Training accuracy:", best_model.score(X_train, y_train))
+print("Testing accuracy:", accuracy_score(y_test, y_pred))
+print("Precision:", precision_score(y_test, y_pred, zero_division=0))
+print("Recall:", recall_score(y_test, y_pred, zero_division=0))
+print("F1-score:", f1_score(y_test, y_pred, zero_division=0))
+print("\nClassification report:")
+print(classification_report(y_test, y_pred, target_names=cancer.target_names))
