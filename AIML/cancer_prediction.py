@@ -128,3 +128,18 @@ plt.xlabel("Predicted")
 plt.ylabel("Actual")
 plt.tight_layout()
 plt.show()
+# 8. Decision tree visualization (display first 3 levels for readability)
+plt.figure(figsize=(24, 12))
+plot_tree(
+    best_model,
+    feature_names=X.columns,
+    class_names=cancer.target_names,
+    filled=True,
+    rounded=True,
+    max_depth=3,
+    fontsize=8
+)
+plt.title("Decision Tree Classifier (first 3 levels)")
+plt.tight_layout()
+plt.savefig("breast_cancer_decision_tree.png", dpi=300)
+plt.show()
