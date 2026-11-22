@@ -98,3 +98,107 @@ def show_feature_importance(model, feature_names, title, top_n=10):
     plt.tight_layout()
     plt.show()
     return importance
+diabetes.hist(figsize=(14, 10), bins=20)
+plt.suptitle("Diabetes Dataset - Feature Distributions")
+plt.tight_layout()
+plt.show()
+
+plt.figure(figsize=(10, 7))
+sns.heatmap(diabetes.corr(numeric_only=True), annot=True, cmap="coolwarm", fmt=".2f")
+plt.title("Diabetes Feature Correlation")
+plt.tight_layout()
+plt.show()
+
+sns.countplot(data=diabetes, x="Outcome")
+plt.title("Diabetes Outcome Distribution")
+plt.xlabel("Outcome (0 = Non-diabetic, 1 = Diabetic)")
+plt.tight_layout()
+plt.show()
+
+# In the original Pima dataset, zero is invalid for these measurements.
+zero_invalid_columns = [
+    "Glucose", "BloodPressure", "SkinThickness", "Insulin", "BMI"
+]
+
+for col in zero_invalid_columns:
+    if col in diabetes.columns:
+        diabetes[col] = diabetes[col].replace(0, np.nan)
+
+print("\\nInvalid zero values converted to missing:")
+print(diabetes[zero_invalid_columns].isnull().sum())
+
+# Median imputation preserves rows and is robust to skewed medical measurements.
+for col in zero_invalid_columns:
+    diabetes[col] = diabetes[col].fillna(diabetes[col].median())
+
+# Remove duplicate rows if any.
+diabetes = diabetes.drop_duplicates()
+
+print("\\nMissing values after preprocessing:")
+print(diabetes.isnull().sum())
+
+# Save cleaned dataset as required in the deliverable.
+diabetes.to_csv("diabetes_cleaned.csv", index=False)
+print("\\nCleaned diabetes dataset saved as diabetes_cleaned.csv")
+
+X_diabetes = diabetes.drop("Outcome", axis=1)
+y_diabetes = diabetes["Outcome"]
+
+X_train_d, X_test_d, y_train_d, y_test_d = train_test_split(
+    X_diabetes, y_diabetes,
+    test_size=0.20,
+    random_state=RANDOM_STATE,
+    stratify=y_diabetes
+)
+
+print("\\nDiabetes training shape:", X_train_d.shape)
+print("Diabetes testing shape :", X_test_d.shape)
+
+# Compare different maximum depths.
+best_depth_d, depth_results_d = compare_depths(
+    X_train_d, X_test_d, y_train_d, y_test_d, criterion="gini"
+)
+
+# Experiment with criterion, depth, and minimum split.
+diabetes_model = DecisionTreeClassifier(
+    criterion="gini",            # Try "entropy" as well
+    max_depth=best_depth_d,
+    min_samples_split=10,        # Try 2, 5, 10, 20
+    min_samples_leaf=5,          # Helps reduce overfitting
+    random_state=RANDOM_STATE
+)
+
+diabetes_model.fit(X_train_d, y_train_d)
+
+evaluate_model(
+    diabetes_model, X_train_d, X_test_d, y_train_d, y_test_d,
+    "Diabetes Decision Tree"
+)
+
+show_tree(
+    diabetes_model,
+    X_diabetes.columns,
+    ["Non-diabetic", "Diabetic"],
+    "Decision Tree - Diabetes Prediction"
+)
+
+diabetes_importance = show_feature_importance(
+    diabetes_model, X_diabetes.columns,
+    "Diabetes - Important Features"
+)
+
+# Compare Gini and Entropy using the selected depth.
+for criterion in ["gini", "entropy"]:
+    model = DecisionTreeClassifier(
+        criterion=criterion,
+        max_depth=best_depth_d,
+        min_samples_split=10,
+        min_samples_leaf=5,
+        random_state=RANDOM_STATE
+    )
+    model.fit(X_train_d, y_train_d)
+    print(
+        f"Diabetes | {criterion} | "
+        f"Train: {accuracy_score(y_train_d, model.predict(X_train_d)):.3f} | "
+        f"Test: {accuracy_score(y_test_d, model.predict(X_test_d)):.3f}"
+    )
