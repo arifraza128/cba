@@ -202,3 +202,62 @@ for criterion in ["gini", "entropy"]:
         f"Train: {accuracy_score(y_train_d, model.predict(X_train_d)):.3f} | "
         f"Test: {accuracy_score(y_test_d, model.predict(X_test_d)):.3f}"
     )
+    # ============================================================
+# PRACTICAL 2: HEART DISEASE PREDICTION
+# Dataset: UCI Cleveland Heart Disease
+# ============================================================
+
+print("\\n\\n******** HEART DISEASE PREDICTION ********")
+
+# Download processed.cleveland.data from the UCI repository and save it
+# as heart.csv, OR use a Cleveland CSV containing the named columns below.
+heart_columns = [
+    "age", "sex", "cp", "trestbps", "chol", "fbs", "restecg",
+    "thalach", "exang", "oldpeak", "slope", "ca", "thal", "target"
+]
+
+# If using the original UCI processed Cleveland file, it has no header
+# and uses '?' for missing values and target values 0-4.
+# This block detects and loads that original format.
+try:
+    heart = pd.read_csv("heart.csv")
+    if heart.shape[1] == 14 and not set(heart_columns).issubset(heart.columns):
+        heart.columns = heart_columns
+except FileNotFoundError:
+    raise FileNotFoundError(
+        "Please download the Cleveland dataset and save it as heart.csv."
+    )
+
+# Normalize column names for common downloaded datasets.
+heart.columns = [str(c).strip().lower() for c in heart.columns]
+
+# Common Kaggle/UCI naming variants.
+rename_map = {
+    "num": "target",
+    "heartdisease": "target",
+    "condition": "target"
+}
+heart = heart.rename(columns=rename_map)
+
+print("\\nFirst five records:")
+print(heart.head())
+
+print("\\nDataset shape:", heart.shape)
+print("\\nDataset information:")
+heart.info()
+
+print("\\nStatistical summary:")
+print(heart.describe(include="all"))
+
+# Replace UCI missing marker '?' and convert columns to numeric.
+heart = heart.replace("?", np.nan)
+
+for col in heart.columns:
+    heart[col] = pd.to_numeric(heart[col], errors="coerce")
+
+print("\\nMissing values:")
+print(heart.isnull().sum())
+
+print("\\nDuplicate records:", heart.duplicated().sum())
+
+heart = heart.drop_duplicates()
