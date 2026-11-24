@@ -261,3 +261,36 @@ print(heart.isnull().sum())
 print("\\nDuplicate records:", heart.duplicated().sum())
 
 heart = heart.drop_duplicates()
+# Convert original Cleveland target: 0 = no disease, 1-4 = disease.
+# If target already contains only 0 and 1, this also works.
+heart["target"] = (heart["target"] > 0).astype(int)
+
+# Impute missing numeric values using median.
+for col in heart.columns:
+    if col != "target":
+        heart[col] = heart[col].fillna(heart[col].median())
+
+print("\\nMissing values after preprocessing:")
+print(heart.isnull().sum())
+
+heart.to_csv("heart_cleaned.csv", index=False)
+print("\\nCleaned heart dataset saved as heart_cleaned.csv")
+
+# EDA
+heart.hist(figsize=(15, 11), bins=20)
+plt.suptitle("Heart Disease Dataset - Feature Distributions")
+plt.tight_layout()
+plt.show()
+
+plt.figure(figsize=(12, 9))
+sns.heatmap(heart.corr(numeric_only=True), annot=True, cmap="coolwarm", fmt=".2f")
+plt.title("Heart Disease Feature Correlation")
+plt.tight_layout()
+plt.show()
+
+sns.countplot(data=heart, x="target")
+plt.title("Heart Disease Target Distribution")
+plt.xlabel("0 = No disease, 1 = Disease")
+plt.tight_layout()
+plt.show()
+
